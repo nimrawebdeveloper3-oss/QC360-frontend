@@ -1,0 +1,55 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
+
+export default function Home() {
+  const { user, isAuthenticated, loading, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-200 to-gray-100">
+        <div className="text-gray-600 text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen flex flex-col items-center justify-center text-center bg-gradient-to-r from-gray-200 to-gray-100 text-black/70 px-6">
+        {isAuthenticated ? (
+          <>
+            <h1 className="text-4xl font-bold mb-4">
+              Welcome back, {user?.fullName || "User"}!
+            </h1>
+            <p className="text-lg mb-2">Username: {user?.username}</p>
+            <p className="text-lg mb-6">Email: {user?.email}</p>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-full shadow-md transition"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <h1 className="text-4xl font-bold mb-4">
+              Welcome to QC360 Project
+            </h1>
+            <p className="text-lg mb-6 max-w-xl">
+              Join us today and explore awesome features designed to make your
+              experience impressive and powerful.
+            </p>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
